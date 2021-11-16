@@ -1,5 +1,5 @@
 import tkinter as tk
-from tkinter import Frame, filedialog, Text
+from tkinter import *
 import os
 import random
 import time
@@ -9,17 +9,20 @@ canvas= tk.Canvas(root, height=600, width=1000,bg="grey")
 canvas.pack()
 root.resizable(0,0)
 
-label1=tk.Label(root, text="Enter your name braveheart: ")
-canvas.create_window(500,200,width=400, height=50, window=label1)
-label1.pack()
+label1=tk.Label(root, text="Enter your name braveheart: ",bg="grey",font=('old english text mt',18))
+#canvas.create_window(500,200,width=400, height=50, window=label1)
+label1.place(x=380,y=220)
 
 def save_name():
     global name
     name=name_entry.get()
     name_entry.destroy()
+    label1.destroy()
     N_E.destroy()
-    
+
 name_entry=tk.Entry(root)
+name_entry.configure(font="century")
+name_entry.focus()
 name=name_entry.get()
 canvas.create_window(500,300,width=400, height=50, window=name_entry)
 N_E=tk.Button(root, text="Enter",command= save_name)
