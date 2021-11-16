@@ -1,2 +1,1 @@
-# Dungeons and Dragons
- 
+This is a Python emulation of the popular co-op game Dungeons and Dragons
