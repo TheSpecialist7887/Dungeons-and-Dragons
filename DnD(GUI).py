@@ -59,6 +59,31 @@ def elemnet(name):
     b5=tk.Button(root, text="GEO",font=('Serif',11,'bold'), padx=20, pady=7,fg="#FFC300",bg="#6E2C00",command=lambda: difficulty("geo"))
     b5.place(x=695,y=330)
 
+
+def difficulty(ele):
+    global diff_title,newbie,hero,titan,hero_element
+    hero_element=ele
+    l1.destroy()
+    l2.destroy()
+    b1.destroy()
+    b2.destroy()
+    b3.destroy()
+    b4.destroy()
+    b5.destroy()
+
+    diff_title=tk.Label(root,text="CHOOSE YOUR DIFFICULTY LEVEL",bg="grey",font=btn)
+    diff_title.place(x=280,y=220)
+
+    newbie=tk.Button(root, text="NEWBIE",font=('Serif',11,'bold'),command=lambda:gameplay("newbie"),padx=20, pady=7,fg="yellow",bg="green")
+    newbie.place(x=280,y=300)
+
+    hero=tk.Button(root, text="HERO",font=('Serif',11,'bold'),command=lambda:gameplay("hero"), padx=20, pady=7,fg="yellow",bg="red")
+    hero.place(x=463,y=300)
+
+    titan=tk.Button(root, text="TITAN",font=('Serif',11,'bold'),command=lambda:gameplay("titan"), padx=20, pady=7,fg="#D930FD",bg="black")
+    titan.place(x=634,y=300)
+
+
 def gameplay(diff):
     global n_atk,s_atk,heal
 
@@ -86,28 +111,7 @@ def gameplay(diff):
         s_atk+=3
     game_entry()
 
-def difficulty(ele):
-    global diff_title,newbie,hero,titan,hero_element
-    hero_element=ele
-    l1.destroy()
-    l2.destroy()
-    b1.destroy()
-    b2.destroy()
-    b3.destroy()
-    b4.destroy()
-    b5.destroy()
 
-    diff_title=tk.Label(root,text="CHOOSE YOUR DIFFICULTY LEVEL",bg="grey",font=btn)
-    diff_title.place(x=280,y=220)
-
-    newbie=tk.Button(root, text="NEWBIE",font=('Serif',11,'bold'),command=lambda:gameplay("newbie"),padx=20, pady=7,fg="yellow",bg="green")
-    newbie.place(x=280,y=300)
-
-    hero=tk.Button(root, text="HERO",font=('Serif',11,'bold'),command=lambda:gameplay("hero"), padx=20, pady=7,fg="yellow",bg="red")
-    hero.place(x=463,y=300)
-
-    titan=tk.Button(root, text="TITAN",font=('Serif',11,'bold'),command=lambda:gameplay("titan"), padx=20, pady=7,fg="#D930FD",bg="black")
-    titan.place(x=634,y=300)
 
 
 
@@ -171,6 +175,10 @@ def flee():
 def game_entry():
     global hero_hp,monster_hp,name,heal
     global monster_status,hero_status
+    normalAtk.config(state=NORMAL)
+    specialAtk.config(state=NORMAL)
+    heal_bt.config(state=NORMAL)
+    flee_bt.config(state=NORMAL)
     if hero_hp>=1:
         hero_name=tk.Label(root,text=name+" ("+hero_element+")",bg="grey",font=btn)
         hero_name.place(x=100,y=150)
@@ -187,17 +195,30 @@ def game_entry():
         if monster_hp<1:
             w=Label(root,text="You Win!!",font=btn,bg="grey")
             w.place(x=300,y=300)
-            normalAtk.destroy()
-            specialAtk.destroy()
-            heal_bt.destroy()
-            flee_bt.destroy()
+            normalAtk.config(state=DISABLED)
+            specialAtk.config(state=DISABLED)
+            heal_bt.config(state=DISABLED)
+            flee_bt.config(state=DISABLED)
+
     elif hero_hp<1:
+            hero_name=tk.Label(root,text=name+" ("+hero_element+")",bg="grey",font=btn)
+            hero_name.place(x=100,y=150)
+            hero_status=tk.Label(root,text=hero_hp,bg="white",font=stats)
+            hero_status.place(x=700,y=150)
+            monster_name=tk.Label(root,text=spawn_monster,bg="grey",font=btn)
+            monster_name.place(x=100,y=200)
+            monster_status=tk.Label(root,text=monster_hp,bg="white",font=stats)
+            monster_status.place(x=700,y=200)
+            potion=tk.Label(root,text="potion",bg="grey",font=btn)
+            potion.place(x=100,y=500)
+            potion_count=tk.Label(root,text=heal,bg="white",font=stats)
+            potion_count.place(x=700,y=500)
             l=Label(root,text="You Lost.....",font=btn,bg="grey")
             l.place(x=300,y=300)
-            normalAtk.destroy()
-            specialAtk.destroy()
-            heal_bt.destroy()
-            flee_bt.destroy()
+            normalAtk.config(state=DISABLED)
+            specialAtk.config(state=DISABLED)
+            heal_bt.config(state=DISABLED)
+            flee_bt.config(state=DISABLED)
 
 
 
@@ -212,16 +233,16 @@ canvas.create_window(500,390,width=200, height=50, window=N_E)
 
 
 
-normalAtk=tk.Button(root, text="Normal Attack", padx=10, pady=5, fg="white", bg="blue",command=normal_atk)
+normalAtk=tk.Button(root, text="Normal Attack", padx=10, pady=5, fg="white", bg="blue",command=normal_atk,state=DISABLED)
 normalAtk.pack(side="left",padx=10,pady=10)
 
-specialAtk=tk.Button(root, text="Special Attack", padx=10, pady=5, fg="white", bg="red",command=special_atk)
+specialAtk=tk.Button(root, text="Special Attack", padx=10, pady=5, fg="white", bg="red",command=special_atk,state=DISABLED)
 specialAtk.pack(side="left",padx=10,pady=10)
 
-flee_bt=tk.Button(root, text="Flee", padx=10, pady=5, fg="white", bg="gray",command=flee)
+flee_bt=tk.Button(root, text="Flee", padx=10, pady=5, fg="white", bg="gray",command=flee,state=DISABLED)
 flee_bt.pack(side="right",padx=10,pady=10,ipadx=20)
 
-heal_bt=tk.Button(root, text="Heal", padx=10, pady=5, fg="white", bg="green",command=heal)
+heal_bt=tk.Button(root, text="Heal", padx=10, pady=5, fg="white", bg="green",command=heal,state=DISABLED)
 heal_bt.pack(side="right",padx=10,pady=10,ipadx=25)
 
 sign=tk.Label(root,text="Developed by Ayan Saha and Divyadeep Mondal \n v1.0.0, 2021", font=("century gothic",11))
