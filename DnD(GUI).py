@@ -7,6 +7,7 @@ from tkinter.messagebox import showerror
 
 
 root= tk.Tk()
+root.title('Dungeons & Dragons')
 canvas= tk.Canvas(root, height=600, width=1000,bg="#264c5e")
 canvas.pack()
 root.resizable(0,0)
@@ -60,6 +61,14 @@ def elemnet(name):
     b5=tk.Button(root, text="GEO",font=('Serif',11,'bold'), padx=20, pady=7,fg="#FFC300",bg="#6E2C00",command=lambda: difficulty("geo"))
     b5.place(x=695,y=330)
 
+def elemental_resonance():
+    global n_atk,s_atk
+    if(m_element==hero_element):
+        n_atk-=3
+        s_atk-=5
+    else:
+        n_atk+=2
+        s_atk+=3
 
 def difficulty(ele):
     global diff_title,newbie,hero,titan,hero_element
@@ -71,17 +80,18 @@ def difficulty(ele):
     b3.destroy()
     b4.destroy()
     b5.destroy()
+    elemental_resonance()
 
     diff_title=tk.Label(root,text="CHOOSE YOUR DIFFICULTY LEVEL",bg="#264c5e",fg='white',font=btn)
     diff_title.place(x=280,y=220)
 
-    newbie=tk.Button(root, text="NEWBIE",font=('Serif',11,'bold'),command=lambda:gameplay("newbie"),padx=20, pady=7,fg="white",bg="green")
+    newbie=tk.Button(root, text="Easy",font=('Serif',11,'bold'),command=lambda:gameplay("newbie"),padx=20, pady=7,fg="white",bg="green")
     newbie.place(x=280,y=300)
 
-    hero=tk.Button(root, text="HERO",font=('Serif',11,'bold'),command=lambda:gameplay("hero"), padx=20, pady=7,fg="yellow",bg="red")
+    hero=tk.Button(root, text="Difficult",font=('Serif',11,'bold'),command=lambda:gameplay("hero"), padx=20, pady=7,fg="yellow",bg="red")
     hero.place(x=463,y=300)
 
-    titan=tk.Button(root, text="TITAN",font=('Serif',11,'bold'),command=lambda:gameplay("titan"), padx=20, pady=7,fg="#D930FD",bg="black")
+    titan=tk.Button(root, text="Nightmare",font=('Serif',11,'bold'),command=lambda:gameplay("titan"), padx=20, pady=7,fg="#D930FD",bg="black")
     titan.place(x=634,y=300)
 
 
@@ -95,14 +105,17 @@ def gameplay(diff):
 
     if(diff=="newbie"):
         heal=3
+        t="Good luck Hero.\n"+name+" is in peak condition."
     elif(diff=="hero"):
         n_atk-=2
         s_atk-=3
         heal=1
+        t="Be weary Hero.\n"+name+" is  exhausted.\n Choose your moves carefully."
     elif(diff=="titan"):
         n_atk-=3
         s_atk-=5
         heal=0
+        t="Act Wisely Hero.\n"+name+" has been tricked and poisoned.\n Face it if you believe in thy skills."
 
     if(m_element==hero_element):
         n_atk-=3
@@ -110,6 +123,9 @@ def gameplay(diff):
     else:
         n_atk+=2
         s_atk+=3
+    global status_bar
+    status_bar=tk.Label(root,text=t,font=btn,bg="#264c5e")
+    status_bar.place(x=250,y=300)
     game_entry()
 
 
@@ -120,16 +136,22 @@ def gameplay(diff):
 def normal_atk():
     global monster_hp,hero_hp,n_atk,monster_status,hero_status
     monster_hp-=n_atk
+    t=name+" has dealt "+str(n_atk)+" damage.\n"
     monster_status.destroy()
     hero_status.destroy()
     attack_value = random.randint(1,3)
 
-    if attack_value == 1:
-        hero_hp-=10
-    elif attack_value == 2:
-        hero_hp-=15
-    elif attack_value==3:
-        hero_hp-=20
+    if(monster_hp>0):
+        if attack_value == 1:
+            hero_hp-=10
+            t+=spawn_monster+" has dealt 10 damage."
+        elif attack_value == 2:
+            hero_hp-=15
+            t+=spawn_monster+" has dealt 15 damage."
+        elif attack_value==3:
+            hero_hp-=20
+            t+=spawn_monster+" has dealt 20 damage."
+    status_bar.config(text=t,font=btn)
     game_entry()
 
 def special_atk():
@@ -137,20 +159,28 @@ def special_atk():
     monster_status.destroy()
     hero_status.destroy()
 
+
     chance=random.randint(1,10)
     
     if chance%2==0:
         monster_hp-=s_atk
+        t=name+" has dealt "+str(s_atk)+" damage.\n"
     elif chance%2==1:
         monster_hp-=0
+        t=name+" failed to inflict damage.\n"
     attack_value = random.randint(1,3)
 
-    if attack_value == 1:
-        hero_hp-=10
-    elif attack_value == 2:
-        hero_hp-=15
-    elif attack_value==3:
-        hero_hp-=20
+    if(monster_hp>0):
+        if attack_value == 1:
+            hero_hp-=10
+            t+=spawn_monster+" has dealt 10 damage."
+        elif attack_value == 2:
+            hero_hp-=15
+            t+=spawn_monster+" has dealt 15 damage."
+        elif attack_value==3:
+            hero_hp-=20
+            t+=spawn_monster+" has dealt 20 damage."
+    status_bar.config(text=t, font=btn)
     game_entry()
 
 def heal():
@@ -158,6 +188,8 @@ def heal():
     if heal>0:
         hero_hp+=30
         heal-=1
+        t="You recovered 30 health.\nYou have "+str(heal)+" potions left."
+        status_bar.config(text=t, font=btn)
         game_entry()
 
     else:
@@ -168,8 +200,8 @@ def flee():
     hero_status.destroy()
     fled=tk.Label(root,text="ran away",bg="white",font=stats)
     fled.place(x=700,y=100)
-    f=Label(root,text="You fled like a coward......\n You have no honour.......",font=btn,bg="grey")
-    f.place(x=300,y=300)
+    t=name+" was a coward and fled.\n"+name+" needs to grow a pair."
+    status_bar.config(text=t, font=btn)
     normalAtk.config(state=DISABLED)
     specialAtk.config(state=DISABLED)
     heal_bt.config(state=DISABLED)
@@ -201,32 +233,34 @@ def game_entry():
 
 
         if monster_hp<1:
-            w=Label(root,text="You Win!!",font=btn,bg="#264c5e")
-            w.place(x=300,y=300)
+            t=name+" Wins!!!"
+            status_bar.config(text=t, font=btn)
             normalAtk.config(state=DISABLED)
             specialAtk.config(state=DISABLED)
             heal_bt.config(state=DISABLED)
             flee_bt.config(state=DISABLED)
 
     elif hero_hp<1:
-            hero_name=tk.Label(root,text=name+" ("+hero_element+")",bg="#264c5e",font=btn)
-            hero_name.place(x=100,y=150)
-            hero_status=tk.Label(root,text=hero_hp,bg="white",font=stats)
-            hero_status.place(x=700,y=150)
-            monster_name=tk.Label(root,text=spawn_monster,bg="grey",font=btn)
-            monster_name.place(x=100,y=200)
-            monster_status=tk.Label(root,text=monster_hp,bg="white",font=stats)
-            monster_status.place(x=700,y=200)
-            potion=tk.Label(root,text="potion",bg="grey",font=btn)
-            potion.place(x=100,y=500)
-            potion_count=tk.Label(root,text=heal,bg="white",font=stats)
-            potion_count.place(x=700,y=500)
-            l=Label(root,text="You Lost.....",font=btn,bg="grey")
-            l.place(x=300,y=300)
-            normalAtk.config(state=DISABLED)
-            specialAtk.config(state=DISABLED)
-            heal_bt.config(state=DISABLED)
-            flee_bt.config(state=DISABLED)
+           hero_name=tk.Label(root,text=name+" ("+hero_element+")",fg="#ff9912",bg="#264c5e",font=btn)
+           hero_name.place(x=100,y=100)
+           hero_status=tk.Label(root,text=hero_hp,bg="white",font=stats)
+           hero_status.place(x=700,y=100)
+
+           monster_name=tk.Label(root,text=spawn_monster,fg="#b0bf1a",bg="#264c5e",font=btn)
+           monster_name.place(x=100,y=150)
+           monster_status=tk.Label(root,text=monster_hp,bg="white",font=stats)
+           monster_status.place(x=700,y=150)
+
+           potion=tk.Label(root,text="Potions Available",fg="#7DF9FF",bg="#264c5e",font=btn)
+           potion.place(x=100,y=200)
+           potion_count=tk.Label(root,text=heal,bg="white",font=stats)
+           potion_count.place(x=700,y=200)
+           t=name+" lost.\n Better luck next time Fallen One."
+           status_bar.config(text=t,font=btn)
+           normalAtk.config(state=DISABLED)
+           specialAtk.config(state=DISABLED)
+           heal_bt.config(state=DISABLED)
+           flee_bt.config(state=DISABLED)
 
 
 
