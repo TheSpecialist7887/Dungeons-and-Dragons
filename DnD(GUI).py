@@ -1,4 +1,3 @@
-import time
 import random
 import tkinter as tk
 from tkinter import *
@@ -27,7 +26,7 @@ random.shuffle(monster)
 spawn_monster = m_element+" "+random.choice(monster)
 
 label1=tk.Label(root, text="Enter your name braveheart: ",bg="#264c5e",fg='white',font=btn,bd=5)
-label1.place(x=270,y=220)
+label1.place(x=250,y=220)
 
 def save_name():
     global name
@@ -85,13 +84,13 @@ def difficulty(ele):
     diff_title=tk.Label(root,text="CHOOSE YOUR DIFFICULTY LEVEL",bg="#264c5e",fg='white',font=btn)
     diff_title.place(x=280,y=220)
 
-    newbie=tk.Button(root, text="Easy",font=('Serif',11,'bold'),command=lambda:gameplay("newbie"),padx=20, pady=7,fg="white",bg="green")
+    newbie=tk.Button(root, text="EASY",font=('Serif',11,'bold'),command=lambda:gameplay("newbie"),padx=20, pady=7,fg="white",bg="green")
     newbie.place(x=280,y=300)
 
-    hero=tk.Button(root, text="Difficult",font=('Serif',11,'bold'),command=lambda:gameplay("hero"), padx=20, pady=7,fg="yellow",bg="red")
-    hero.place(x=463,y=300)
+    hero=tk.Button(root, text="DIFFICULT",font=('Serif',11,'bold'),command=lambda:gameplay("hero"), padx=20, pady=7,fg="yellow",bg="red")
+    hero.place(x=440,y=300)
 
-    titan=tk.Button(root, text="Nightmare",font=('Serif',11,'bold'),command=lambda:gameplay("titan"), padx=20, pady=7,fg="#D930FD",bg="black")
+    titan=tk.Button(root, text="NIGHTMARE",font=('Serif',11,'bold'),command=lambda:gameplay("titan"), padx=20, pady=7,fg="#D930FD",bg="black")
     titan.place(x=634,y=300)
 
 
@@ -110,7 +109,7 @@ def gameplay(diff):
         n_atk-=2
         s_atk-=3
         heal=1
-        t="Be weary Hero.\n"+name+" is  exhausted.\n Choose your moves carefully."
+        t="Be wary Hero.\n"+name+" is  exhausted.\n Choose your moves carefully."
     elif(diff=="titan"):
         n_atk-=3
         s_atk-=5
@@ -124,8 +123,8 @@ def gameplay(diff):
         n_atk+=2
         s_atk+=3
     global status_bar
-    status_bar=tk.Label(root,text=t,font=btn,bg="#264c5e")
-    status_bar.place(x=250,y=300)
+    status_bar=tk.Label(root,text=t,font=btn,bg="#264c5e",fg="#ffffff")
+    status_bar.place(relx=0.5,rely=0.5,anchor="center")
     game_entry()
 
 
@@ -200,7 +199,7 @@ def flee():
     hero_status.destroy()
     fled=tk.Label(root,text="ran away",bg="white",font=stats)
     fled.place(x=700,y=100)
-    t=name+" was a coward and fled.\n"+name+" needs to grow a pair."
+    t=name+" was a coward and fled.\n"+name+" has no honour"
     status_bar.config(text=t, font=btn)
     normalAtk.config(state=DISABLED)
     specialAtk.config(state=DISABLED)
@@ -289,6 +288,6 @@ heal_bt=tk.Button(root, text="Heal", padx=10, pady=5,relief=SUNKEN, command=heal
 heal_bt.pack(side="right",padx=10,pady=10,ipadx=25)
 
 sign=tk.Label(root,text="Developed by Ayan Saha and Divyadeep Mondal \n v1.0.0, 2021", font=("century gothic",11))
-sign.pack(side=BOTTOM,expand=True,fill=X)
+sign.pack(side=BOTTOM,expand=True,fill=X,padx=5)
 
 root.mainloop()
